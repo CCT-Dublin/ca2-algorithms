@@ -16,5 +16,6 @@ public enum MenuOption {
     ADD_RECORDS,
     CREATE_BINARY_TREE,
     APPLICANT_TREE,
+    EMPLOYEE_HIERARCHY,
     EXIT
 }

@@ -20,10 +20,12 @@ import enums.Department;
 import java.util.Scanner;
 import java.util.List;
 import java.util.ArrayList;
-import model.ApplicantTree;
+
 
 import model.BinaryTree;
 import model.Employee;
+import model.ApplicantTree;
+import model.EmployeeHierarchyTree;
 
 import utils.FileReaderUtils;
 import utils.MergeSortUtils;
@@ -163,10 +165,11 @@ public class MenuView {
             System.out.println("3. ADD RECORDS");
             System.out.println("4. CREATE BINARY TREE");
             System.out.println("5. CREATE APPLICANT BINARY TREE (from file)");
-            System.out.println("6. EXIT");
+            System.out.println("6. EMPLOYEE HIERARCHY TREE");
+            System.out.println("7. EXIT");
             System.out.print("Choose an option: ");
 
-            int choice = readIntInRange(1, 6);
+            int choice = readIntInRange(1, 7);
 
             switch (choice) {
                 case 1 -> option = MenuOption.SORT;
@@ -174,7 +177,8 @@ public class MenuView {
                 case 3 -> option = MenuOption.ADD_RECORDS;
                 case 4 -> option = MenuOption.CREATE_BINARY_TREE;
                 case 5 -> option = MenuOption.APPLICANT_TREE;  
-                case 6 -> option = MenuOption.EXIT;         
+                case 6 -> option = MenuOption.EMPLOYEE_HIERARCHY;
+                case 7 -> option = MenuOption.EXIT;       
             }
 
             handleChoice(option);
@@ -314,18 +318,35 @@ String target = sc.nextLine().trim();
             System.out.println("\nApplicant file is empty or unreadable.");
             return;
         }
-           
-         //Creates a Binary Search Tree using all names read from the Applicants_Form file
-         ApplicantTree tree = new ApplicantTree();
-        for (String name : applicants) {
-        tree.insert(name);
+
+          ApplicantTree tree = new ApplicantTree();
+          for (String name : applicants) {
+          tree.insert(name);
         }
 
         tree.preOrder();
         tree.inOrder();
         tree.postOrder();
-}
-            // Terminates the program
+      }
+
+          case EMPLOYEE_HIERARCHY -> {
+
+             //Create a new hierarchy tree instance (level-order based)
+                EmployeeHierarchyTree tree = new EmployeeHierarchyTree();
+
+              //Insert each employee into the hierarchy tree
+             //This tree does NOT sort by name; it inserts nodes in the first available position.
+              for (Employee emp : employeeList) {
+                tree.insert(emp);
+                }
+
+            //Display all tree traversals for reporting and analysis
+            tree.preorder();   // Visit root → left → right
+            tree.inorder();    // Visit left → root → right
+            tree.postorder();  // Visit left → right → root
+        }
+          
+            //Terminates the program
             case EXIT -> System.out.println("Exiting...");
         }
     }
