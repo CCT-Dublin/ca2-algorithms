@@ -12,6 +12,7 @@ package view;
  * @author mariana
  */
 
+//imports
 import enums.MenuOption;
 import enums.ManagerType;
 import enums.Department;
@@ -51,7 +52,7 @@ public class MenuView {
                 if (value >= min && value <= max) {
                     return value;
                 }
-                System.out.print("Invalid number! Choose between " + min + " and " + max + ": ");
+                System.out.print("Invalid number! Please Choose between " + min + " and " + max + ": ");
             } catch (NumberFormatException e) {
                 System.out.print("Invalid input! Please enter a number: ");
             }
