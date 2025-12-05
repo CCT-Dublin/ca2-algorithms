@@ -151,7 +151,6 @@ public class MenuView {
 
     // ------------------------------ START MENU ------------------------------
     
-    
     //Displays the main application menu and loops until the user chooses EXIT.
     public void start() {
 
