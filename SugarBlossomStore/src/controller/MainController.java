@@ -3,36 +3,37 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package controller;
-/**
- * MainController is the entry point of the application.
- *
- *This class is responsible for launching the main user interface
- * of the Sugar Blossom Department Store system. It initializes the 
- * {@link view.MenuView} and delegates control to it so that 
- * the program follows a MVC-based structure as required for the assingment.
- *
- * Responsibilities of this class:
- * 
- *Instantiate the main menu interface
- *Start the interactive loop handled by {@code MenuView}
- *Maintain a clear separation between the application launcher
- *and the rest of the logic
- * 
- *
- * This class contains only the {@code main} method and should not 
- * hold any business logic. All user interactions and data processing 
- * happens in the view, model, and utils packages.
- *
- *
- * @author mariana
- */
 
 import view.MenuView;
 
+/**
+ * Entry point of the Sugar Blossom Department Store application.
+ *
+ * This class launches the main user interface by creating an instance of
+ * MenuView and starting the program flow. It follows the MVC architecture,
+ * keeping the system's startup logic separated from the rest of the application.
+ *
+ * Responsibilities:
+ * - Initialize the main menu interface.
+ * - Start the interactive loop handled by MenuView.
+ * - Maintain separation between application startup and business logic.
+ *
+ * This class contains only the main method. All data handling, sorting,
+ * searching, and tree operations are performed in other layers of the system.
+ *
+ * @author mariana
+ */
 public class MainController {
+
+    /**
+     * Launches the program by initializing the main menu.
+     *
+     * @param args Program arguments (not used)
+     */
     public static void main(String[] args) {
         MenuView menu = new MenuView();
         menu.start();
     }
 }
+
 

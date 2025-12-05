@@ -1,18 +1,11 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ * Main menu and user interaction handler.
+ * This class is responsible for displaying the system menu, validating input,
+ * and coordinating all features such as sorting, searching, and tree creation.
  */
 package view;
 
-/**
- *Main menu controller responsible for handling all user interactions,
- *input validation, and coordination between sorting, searching,
- *and binary tree operations.
- * 
- * @author mariana
- */
-
-//imports
+// Imports
 import enums.MenuOption;
 import enums.ManagerType;
 import enums.Department;
@@ -20,7 +13,6 @@ import enums.Department;
 import java.util.Scanner;
 import java.util.List;
 import java.util.ArrayList;
-
 
 import model.BinaryTree;
 import model.Employee;
@@ -31,37 +23,54 @@ import utils.FileReaderUtils;
 import utils.MergeSortUtils;
 import utils.BinarySearchUtils;
 
-
+/**
+ * Handles all user interaction for the Sugar Blossom Department Store system.
+ *
+ * This class:
+ * - Displays the main menu
+ * - Validates and processes all user input
+ * - Manages employee records created during runtime
+ * - Triggers sorting, searching, and binary tree operations
+ *
+ * It acts as the central controller that connects the view layer to the logic
+ * implemented in the model and utils packages.
+ *
+ * @author mariana
+ */
 public class MenuView {
-    
-    //Stores all employee records created by the user during runtime
+
+    // Stores all employee records added by the user
     private final List<Employee> employeeList = new ArrayList<>();
-    
-    //Single scanner instance used for reading all console inputs
+
+    // Single Scanner instance shared across the class
     private final Scanner sc = new Scanner(System.in);
 
-    // ------------------------------ UTILITIES ------------------------------
-    
-     //Reads a numeric input from the user and ensures it falls within
-    //the inclusive range defined by 'min' and 'max'. Used for menu options
-   //and numeric selections.
+
+    // =====================================================================
+    //                           INPUT UTILITIES
+    // =====================================================================
+
+    /**
+     * Reads a numeric input and ensures it falls inside a valid range.
+     */
     private int readIntInRange(int min, int max) {
         while (true) {
             String input = sc.nextLine().trim();
-
             try {
                 int value = Integer.parseInt(input);
                 if (value >= min && value <= max) {
                     return value;
                 }
-                System.out.print("Invalid number! Please Choose between " + min + " and " + max + ": ");
+                System.out.print("Invalid number! Choose between " + min + " and " + max + ": ");
             } catch (NumberFormatException e) {
                 System.out.print("Invalid input! Please enter a number: ");
             }
         }
     }
-     //Reads and validates an employee name. Only letters and spaces are allowed.
-    //Names are normalized using the capitalize() method.
+
+    /**
+     * Reads an employee name and validates it (letters and spaces only).
+     */
     private String readEmployeeName() {
         while (true) {
             System.out.print("\nEnter employee name: ");
@@ -70,14 +79,17 @@ public class MenuView {
             if (name.matches("^[A-Za-z ]{2,}$")) {
                 return capitalize(name);
             }
-
             System.out.println("Invalid name! Only letters and spaces allowed.");
         }
     }
-   //Helper method that capitalizes each word in a name (e.g., "ana costa" > "Ana Costa")
+
+    /**
+     * Converts each word of a name into capitalized form.
+     */
     private String capitalize(String x) {
         String[] parts = x.toLowerCase().split(" ");
         StringBuilder sb = new StringBuilder();
+
         for (String p : parts) {
             if (!p.isBlank()) {
                 sb.append(Character.toUpperCase(p.charAt(0)))
@@ -87,11 +99,12 @@ public class MenuView {
         }
         return sb.toString().trim();
     }
-     //Reads a manager type from the user. Accepts both numbers (menu index)
-    //and full enum names (case-insensitive)
+
+    /**
+     * Reads a ManagerType enum from the user by number or text.
+     */
     private ManagerType readManagerType() {
         System.out.println("\nChoose Manager Type:");
-
         ManagerType[] types = ManagerType.values();
 
         for (int i = 0; i < types.length; i++) {
@@ -103,6 +116,7 @@ public class MenuView {
         while (true) {
             String input = sc.nextLine().trim();
 
+            // Option entered as number
             try {
                 int num = Integer.parseInt(input);
                 if (num >= 1 && num <= types.length) {
@@ -110,6 +124,7 @@ public class MenuView {
                 }
             } catch (NumberFormatException ignored) {}
 
+            // Option entered as text
             String normalized = input.toUpperCase().replace(" ", "_");
 
             try {
@@ -119,10 +134,12 @@ public class MenuView {
             System.out.print("Invalid option! Type NUMBER or NAME: ");
         }
     }
-     //Reads a department from the user. Accepts both numbers and textual input.
+
+    /**
+     * Reads a Department enum from the user by number or text.
+     */
     private Department readDepartment() {
         System.out.println("\nChoose Department:");
-
         Department[] depts = Department.values();
 
         for (int i = 0; i < depts.length; i++) {
@@ -134,6 +151,7 @@ public class MenuView {
         while (true) {
             String input = sc.nextLine().trim();
 
+            // Option entered as number
             try {
                 int num = Integer.parseInt(input);
                 if (num >= 1 && num <= depts.length) {
@@ -141,6 +159,7 @@ public class MenuView {
                 }
             } catch (NumberFormatException ignored) {}
 
+            // Option entered as text
             String normalized = input.toUpperCase().replace(" ", "_");
 
             try {
@@ -151,9 +170,14 @@ public class MenuView {
         }
     }
 
-    // ------------------------------ START MENU ------------------------------
-    
-    //Displays the main application menu and loops until the user chooses EXIT.
+
+    // =====================================================================
+    //                           MAIN MENU LOOP
+    // =====================================================================
+
+    /**
+     * Starts the main menu loop until the user chooses EXIT.
+     */
     public void start() {
 
         MenuOption option = null;
@@ -176,9 +200,9 @@ public class MenuView {
                 case 2 -> option = MenuOption.SEARCH;
                 case 3 -> option = MenuOption.ADD_RECORDS;
                 case 4 -> option = MenuOption.CREATE_BINARY_TREE;
-                case 5 -> option = MenuOption.APPLICANT_TREE;  
+                case 5 -> option = MenuOption.APPLICANT_TREE;
                 case 6 -> option = MenuOption.EMPLOYEE_HIERARCHY;
-                case 7 -> option = MenuOption.EXIT;       
+                case 7 -> option = MenuOption.EXIT;
             }
 
             handleChoice(option);
@@ -186,32 +210,36 @@ public class MenuView {
         } while (option != MenuOption.EXIT);
     }
 
-    // ------------------------------ OPTIONS HANDLER ------------------------------
-    
-    //Performs a case-insensitive partial search through the employee list
-   //Returns all employees whose names contain the given substring
+
+    // =====================================================================
+    //                        MENU OPTION HANDLERS
+    // =====================================================================
+
+    /**
+     * Partial case-insensitive search through employee names.
+     */
     private List<Employee> searchByPartialName(String input) {
-    List<Employee> results = new ArrayList<>();
+        List<Employee> results = new ArrayList<>();
+        String normalized = input.toLowerCase();
 
-    String normalized = input.toLowerCase();
-
-    for (Employee e : employeeList) {
-        if (e.getName().toLowerCase().contains(normalized)) {
-            results.add(e);
+        for (Employee e : employeeList) {
+            if (e.getName().toLowerCase().contains(normalized)) {
+                results.add(e);
+            }
         }
+        return results;
     }
-    return results;
-}
-    //Handles the main menu logic based on the selected MenuOption
-   //Each case triggers a different subsystem (sorting, searching, tree creation, etc.)
+
+    /**
+     * Executes one of the menu options selected by the user.
+     */
     private void handleChoice(MenuOption option) {
         System.out.println("\nSelected: " + option);
 
         switch (option) {
 
+            // SORT — reads from file and applies Merge Sort
             case SORT -> {
-                
-                //Reads applicant names from file and sorts them alphabetically using Merge Sort
                 List<String> names = FileReaderUtils.readNamesFromCSV("data/Applicants_Form.txt");
                 List<String> sorted = MergeSortUtils.mergeSort(names);
 
@@ -221,86 +249,85 @@ public class MenuView {
                 }
             }
 
+            // SEARCH — partial search for employees
             case SEARCH -> {
-    if (employeeList.isEmpty()) {
-        //Prevents searching when no employees have been added yet
 
-        System.out.println("\nNo employees added yet.");
-        return;
-    }
+                if (employeeList.isEmpty()) {
+                    System.out.println("\nNo employees added yet.");
+                    return;
+                }
 
- System.out.print("\nEnter employee name (full or partial): ");
-String target = sc.nextLine().trim();
+                System.out.print("\nEnter employee name (full or partial): ");
+                String target = sc.nextLine().trim();
 
+                List<Employee> matches = searchByPartialName(target);
 
+                if (matches.isEmpty()) {
+                    System.out.println("\nNo matches found.");
+                    return;
+                }
 
-    //Perform partial matching (supports searching by first name, last name, or fragments)
-    List<Employee> matches = searchByPartialName(target);
+                // Single match
+                if (matches.size() == 1) {
+                    Employee e = matches.get(0);
+                    System.out.println("\nFOUND:");
+                    System.out.println("- Name: " + e.getName());
+                    System.out.println("- Manager Type: " + e.getManagerType());
+                    System.out.println("- Department: " + e.getDepartment());
+                    return;
+                }
 
-    if (matches.isEmpty()) {
-        System.out.println("\nNo matches found.");
-        return;
-    }
+                // Multiple matches
+                System.out.println("\nMultiple results found:\n");
+                for (int i = 0; i < matches.size(); i++) {
+                    System.out.println((i + 1) + " - " + matches.get(i).getName());
+                }
 
-    if (matches.size() == 1) {
-        Employee e = matches.get(0);
-        System.out.println("\nFOUND:");
-        System.out.println("- Name: " + e.getName());
-        System.out.println("- Manager Type: " + e.getManagerType());
-        System.out.println("- Department: " + e.getDepartment());
-        return;
-    }
+                System.out.print("\nChoose the number: ");
+                int choice = readIntInRange(1, matches.size());
+                Employee chosen = matches.get(choice - 1);
 
-    //Display all matches when more than one result is found.
-    System.out.println("\nMultiple results found:\n");
-    for (int i = 0; i < matches.size(); i++) {
-        System.out.println((i + 1) + " - " + matches.get(i).getName());
-    }
-    
-    System.out.print("\nChoose the number: ");
-    int choice = readIntInRange(1, matches.size());
+                System.out.println("\nFOUND:");
+                System.out.println("- Name: " + chosen.getName());
+                System.out.println("- Manager Type: " + chosen.getManagerType());
+                System.out.println("- Department: " + chosen.getDepartment());
+            }
 
-    Employee chosen = matches.get(choice - 1);
-
-    System.out.println("\nFOUND:");
-    System.out.println("- Name: " + chosen.getName());
-    System.out.println("- Manager Type: " + chosen.getManagerType());
-    System.out.println("- Department: " + chosen.getDepartment());
-}
-
-            // Prevent insertion of employees with duplicate names (case-insensitive)
+            // ADD RECORDS — includes duplicate name validation
             case ADD_RECORDS -> {
 
                 String name = readEmployeeName();
                 ManagerType managerType = readManagerType();
                 Department department = readDepartment();
-                
-                // --- DUPLICATE NAME VALIDATION ---
+
+                // Duplicate name check
                 for (Employee e : employeeList) {
-                if (e.getName().equalsIgnoreCase(name)) {
-                System.out.println("\n❌ Error: This employee name already exists.");
-                System.out.println("Existing record → " + e);
-                return;
-    }
-}
+                    if (e.getName().equalsIgnoreCase(name)) {
+                        System.out.println("\nError: This employee name already exists.");
+                        System.out.println("Existing record: " + e);
+                        return;
+                    }
+                }
 
                 Employee emp = new Employee(name, managerType, department);
                 employeeList.add(emp);
 
+                // Keep alphabetical order
                 employeeList.sort((a, b) -> a.getName().compareToIgnoreCase(b.getName()));
 
                 System.out.println("\nEmployee added successfully!");
             }
-            
-            //Builds a Binary Search Tree using the current employee list.
-           //The tree is ordered alphabetically by employee name.
+
+            // BST of employees
             case CREATE_BINARY_TREE -> {
+
                 if (employeeList.size() < 2) {
                     System.out.println("Add at least 2 employees first.");
                     return;
                 }
 
                 BinaryTree tree = new BinaryTree();
+
                 for (Employee emp : employeeList) {
                     tree.insert(emp);
                 }
@@ -309,44 +336,42 @@ String target = sc.nextLine().trim();
                 tree.inOrder();
                 tree.postOrder();
             }
-            
-            //Creates a Binary Search Tree using all names read from the Applicants_Form file
+
+            // BST of applicants from file
             case APPLICANT_TREE -> {
-            List<String> applicants = FileReaderUtils.readNamesFromCSV("data/Applicants_Form.txt");
 
-            if (applicants.isEmpty()) {
-            System.out.println("\nApplicant file is empty or unreadable.");
-            return;
-        }
+                List<String> applicants = FileReaderUtils.readNamesFromCSV("data/Applicants_Form.txt");
 
-          ApplicantTree tree = new ApplicantTree();
-          for (String name : applicants) {
-          tree.insert(name);
-        }
-
-        tree.preOrder();
-        tree.inOrder();
-        tree.postOrder();
-      }
-
-          case EMPLOYEE_HIERARCHY -> {
-
-             //Create a new hierarchy tree instance (level-order based)
-                EmployeeHierarchyTree tree = new EmployeeHierarchyTree();
-
-              //Insert each employee into the hierarchy tree
-             //This tree does NOT sort by name; it inserts nodes in the first available position.
-              for (Employee emp : employeeList) {
-                tree.insert(emp);
+                if (applicants.isEmpty()) {
+                    System.out.println("\nApplicant file is empty or unreadable.");
+                    return;
                 }
 
-            //Display all tree traversals for reporting and analysis
-            tree.preorder();   // Visit root → left → right
-            tree.inorder();    // Visit left → root → right
-            tree.postorder();  // Visit left → right → root
-        }
-          
-            //Terminates the program
+                ApplicantTree tree = new ApplicantTree();
+                for (String name : applicants) {
+                    tree.insert(name);
+                }
+
+                tree.preOrder();
+                tree.inOrder();
+                tree.postOrder();
+            }
+
+            // Level-order hierarchy tree for employees
+            case EMPLOYEE_HIERARCHY -> {
+
+                EmployeeHierarchyTree tree = new EmployeeHierarchyTree();
+
+                for (Employee emp : employeeList) {
+                    tree.insert(emp);
+                }
+
+                tree.preorder();
+                tree.inorder();
+                tree.postorder();
+            }
+
+            // EXIT
             case EXIT -> System.out.println("Exiting...");
         }
     }

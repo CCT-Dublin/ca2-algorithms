@@ -3,13 +3,21 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package enums;
+
 /**
- * Represents all menu options available to the user in the system.
- * Each constant corresponds to a feature executed in the main application.
+ * Enum representing all available menu options in the Sugar Blossom
+ * Department Store application.
+ *
+ * Each value corresponds to a specific feature that can be selected
+ * by the user through the console-based menu. Using an enum ensures
+ * consistency, avoids hard-coded strings, and supports a clear,
+ * structured control flow in the application.
+ *
+ * The options include sorting applicant data, searching employees,
+ * adding records, generating binary trees, and exiting the system.
  *
  * @author mariana
  */
-
 public enum MenuOption {
     SORT,
     SEARCH,

@@ -3,19 +3,20 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package enums;
+
 /**
- * Represents the different departments available in the Sugar Blossom
- * Department Store. Each employee is assigned to exactly one department.
+ * Enum representing all departments available in the Sugar Blossom
+ * Department Store.
  *
- * This enum is used to keep the department options consistent across
- * the system and to avoid invalid text inputs.
+ * Each employee must belong to exactly one department. Using an enum
+ * ensures data consistency throughout the system and prevents invalid
+ * department entries.
  *
- * Departments include areas such as makeup, skincare, fragrances,
- * and luxury beauty.
+ * These values are used during employee registration and searching
+ * to categorize staff members according to their area of specialization.
  *
  * @author mariana
  */
-
 public enum Department {
     MAKEUP,
     SKINCARE,
