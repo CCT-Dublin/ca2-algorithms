@@ -28,7 +28,7 @@ public class Employee {
         this.managerType = managerType;
         this.department = department;
     }
-    //Returns the employee's full name
+    ///Returns the employee's full name
     public String getName() {
         return name;
     }

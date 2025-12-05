@@ -19,7 +19,7 @@ public class ApplicantTree {
     private ApplicantNode root;
     
     //Inserts a new applicant name into the tree
-    //Delegates the operation to the recursive insertion method
+    ///Delegates the operation to the recursive insertion method
 
     public void insert(String name) {
         root = insertRec(root, name);

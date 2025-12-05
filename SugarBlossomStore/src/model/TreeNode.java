@@ -23,7 +23,7 @@ public class TreeNode {
     public TreeNode right;
     
     //Creates a new TreeNode containing the given employee.
-    // Both child references are initialized to null.
+    //Both child references are initialized to null.
     public TreeNode(Employee data) {
         this.data = data;
         this.left = null;

@@ -18,7 +18,7 @@ public class BinaryTree {
 
     private TreeNode root;
     
-   //Initializes an empty Binary Search Tree.
+   ///Initializes an empty Binary Search Tree.
 
     public BinaryTree() {
         this.root = null;

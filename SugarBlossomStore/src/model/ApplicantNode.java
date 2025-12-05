@@ -17,6 +17,7 @@ public class ApplicantNode {
     public ApplicantNode right;
 
     public ApplicantNode(String name) {
+        
         this.name = name;
         this.left = null;
         this.right = null;
