@@ -19,14 +19,14 @@ public class ApplicantTree {
     private ApplicantNode root;
     
     //Inserts a new applicant name into the tree
-    ///Delegates the operation to the recursive insertion method
+    //Delegates the operation to the recursive insertion method
 
     public void insert(String name) {
         root = insertRec(root, name);
     }
     
     //Recursively inserts a new name into the tree.
-     //Names are positioned based on alphabetical order (BST rule).
+    //Names are positioned based on alphabetical order (BST rule).
 
     private ApplicantNode insertRec(ApplicantNode current, String name) {
         
