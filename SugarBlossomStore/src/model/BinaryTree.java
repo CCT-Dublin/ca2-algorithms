@@ -116,4 +116,24 @@ public class BinaryTree {
             System.out.println(node.data);
         }
     }
+    // ====================== NODE COUNT ======================
+public int countNodes() {
+    return countNodesRec(root);
+}
+
+private int countNodesRec(TreeNode node) {
+    if (node == null) return 0;
+    return 1 + countNodesRec(node.left) + countNodesRec(node.right);
+}
+
+// ====================== TREE HEIGHT ======================
+public int height() {
+    return heightRec(root);
+}
+
+private int heightRec(TreeNode node) {
+    if (node == null) return -1; // height of empty tree = -1
+    return 1 + Math.max(heightRec(node.left), heightRec(node.right));
+}
+
 }

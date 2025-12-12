@@ -5,7 +5,6 @@
  */
 package view;
 
-// Imports
 import enums.MenuOption;
 import enums.ManagerType;
 import enums.Department;
@@ -28,21 +27,25 @@ import utils.BinarySearchUtils;
  *
  * This class:
  * - Displays the main menu
- * - Validates and processes all user input
- * - Manages employee records created during runtime
+ * - Validates and processes user input
+ * - Manages employee records created at runtime
  * - Triggers sorting, searching, and binary tree operations
  *
- * It acts as the central controller that connects the view layer to the logic
+ * It serves as the “view” layer of the MVC structure used in this assignment,
+ * acting as the central controller that connects user input to the program logic
  * implemented in the model and utils packages.
+ *
+ * The class also includes data validation, menu navigation, and all interactive
+ * features required by the project specification.
  *
  * @author mariana
  */
 public class MenuView {
 
-    // Stores all employee records added by the user
+    /** Stores employee records added by the user during execution */
     private final List<Employee> employeeList = new ArrayList<>();
 
-    // Single Scanner instance shared across the class
+    /** Shared Scanner instance for all user input */
     private final Scanner sc = new Scanner(System.in);
 
 
@@ -51,7 +54,11 @@ public class MenuView {
     // =====================================================================
 
     /**
-     * Reads a numeric input and ensures it falls inside a valid range.
+     * Reads a numeric value from the user and ensures it is within a given range.
+     *
+     * @param min minimum allowed value
+     * @param max maximum allowed value
+     * @return the validated integer entered by the user
      */
     private int readIntInRange(int min, int max) {
         while (true) {
@@ -69,7 +76,10 @@ public class MenuView {
     }
 
     /**
-     * Reads an employee name and validates it (letters and spaces only).
+     * Reads and validates a full employee name. Only letters and spaces are accepted.
+     * Each word of the name is automatically capitalized.
+     *
+     * @return the formatted employee name
      */
     private String readEmployeeName() {
         while (true) {
@@ -84,7 +94,10 @@ public class MenuView {
     }
 
     /**
-     * Converts each word of a name into capitalized form.
+     * Capitalizes each word in a string (e.g., "ana costa" → "Ana Costa").
+     *
+     * @param x name to be formatted
+     * @return formatted name
      */
     private String capitalize(String x) {
         String[] parts = x.toLowerCase().split(" ");
@@ -101,7 +114,10 @@ public class MenuView {
     }
 
     /**
-     * Reads a ManagerType enum from the user by number or text.
+     * Reads a ManagerType value from the user. Input can be written as a number
+     * (based on the displayed list) or as a text value matching the enum name.
+     *
+     * @return the selected ManagerType
      */
     private ManagerType readManagerType() {
         System.out.println("\nChoose Manager Type:");
@@ -116,7 +132,6 @@ public class MenuView {
         while (true) {
             String input = sc.nextLine().trim();
 
-            // Option entered as number
             try {
                 int num = Integer.parseInt(input);
                 if (num >= 1 && num <= types.length) {
@@ -124,7 +139,6 @@ public class MenuView {
                 }
             } catch (NumberFormatException ignored) {}
 
-            // Option entered as text
             String normalized = input.toUpperCase().replace(" ", "_");
 
             try {
@@ -136,7 +150,9 @@ public class MenuView {
     }
 
     /**
-     * Reads a Department enum from the user by number or text.
+     * Reads a Department value from the user by number or text.
+     *
+     * @return the selected Department
      */
     private Department readDepartment() {
         System.out.println("\nChoose Department:");
@@ -151,7 +167,6 @@ public class MenuView {
         while (true) {
             String input = sc.nextLine().trim();
 
-            // Option entered as number
             try {
                 int num = Integer.parseInt(input);
                 if (num >= 1 && num <= depts.length) {
@@ -159,7 +174,6 @@ public class MenuView {
                 }
             } catch (NumberFormatException ignored) {}
 
-            // Option entered as text
             String normalized = input.toUpperCase().replace(" ", "_");
 
             try {
@@ -176,7 +190,7 @@ public class MenuView {
     // =====================================================================
 
     /**
-     * Starts the main menu loop until the user chooses EXIT.
+     * Displays the main menu and handles user selections until EXIT is chosen.
      */
     public void start() {
 
@@ -216,7 +230,10 @@ public class MenuView {
     // =====================================================================
 
     /**
-     * Partial case-insensitive search through employee names.
+     * Performs partial case-insensitive matching against the employee list.
+     *
+     * @param input the substring to match
+     * @return a list of employees whose names contain the given substring
      */
     private List<Employee> searchByPartialName(String input) {
         List<Employee> results = new ArrayList<>();
@@ -231,14 +248,18 @@ public class MenuView {
     }
 
     /**
-     * Executes one of the menu options selected by the user.
+     * Executes the selected menu option by calling the corresponding system feature.
+     *
+     * This method acts as the connection between the user interface and
+     * the algorithms implemented throughout the project.
+     *
+     * @param option the selected MenuOption
      */
     private void handleChoice(MenuOption option) {
         System.out.println("\nSelected: " + option);
 
         switch (option) {
 
-            // SORT — reads from file and applies Merge Sort
             case SORT -> {
                 List<String> names = FileReaderUtils.readNamesFromCSV("data/Applicants_Form.txt");
                 List<String> sorted = MergeSortUtils.mergeSort(names);
@@ -249,7 +270,6 @@ public class MenuView {
                 }
             }
 
-            // SEARCH — partial search for employees
             case SEARCH -> {
 
                 if (employeeList.isEmpty()) {
@@ -267,7 +287,6 @@ public class MenuView {
                     return;
                 }
 
-                // Single match
                 if (matches.size() == 1) {
                     Employee e = matches.get(0);
                     System.out.println("\nFOUND:");
@@ -277,7 +296,6 @@ public class MenuView {
                     return;
                 }
 
-                // Multiple matches
                 System.out.println("\nMultiple results found:\n");
                 for (int i = 0; i < matches.size(); i++) {
                     System.out.println((i + 1) + " - " + matches.get(i).getName());
@@ -293,14 +311,12 @@ public class MenuView {
                 System.out.println("- Department: " + chosen.getDepartment());
             }
 
-            // ADD RECORDS — includes duplicate name validation
             case ADD_RECORDS -> {
 
                 String name = readEmployeeName();
                 ManagerType managerType = readManagerType();
                 Department department = readDepartment();
 
-                // Duplicate name check
                 for (Employee e : employeeList) {
                     if (e.getName().equalsIgnoreCase(name)) {
                         System.out.println("\nError: This employee name already exists.");
@@ -312,13 +328,11 @@ public class MenuView {
                 Employee emp = new Employee(name, managerType, department);
                 employeeList.add(emp);
 
-                // Keep alphabetical order
                 employeeList.sort((a, b) -> a.getName().compareToIgnoreCase(b.getName()));
 
                 System.out.println("\nEmployee added successfully!");
             }
 
-            // BST of employees
             case CREATE_BINARY_TREE -> {
 
                 if (employeeList.size() < 2) {
@@ -327,7 +341,6 @@ public class MenuView {
                 }
 
                 BinaryTree tree = new BinaryTree();
-
                 for (Employee emp : employeeList) {
                     tree.insert(emp);
                 }
@@ -335,9 +348,13 @@ public class MenuView {
                 tree.preOrder();
                 tree.inOrder();
                 tree.postOrder();
-            }
+                
+                System.out.println("\nTree Height: " + tree.height());
+                System.out.println("Total Nodes: " + tree.countNodes());
 
-            // BST of applicants from file
+            }
+            
+
             case APPLICANT_TREE -> {
 
                 List<String> applicants = FileReaderUtils.readNamesFromCSV("data/Applicants_Form.txt");
@@ -357,7 +374,6 @@ public class MenuView {
                 tree.postOrder();
             }
 
-            // Level-order hierarchy tree for employees
             case EMPLOYEE_HIERARCHY -> {
 
                 EmployeeHierarchyTree tree = new EmployeeHierarchyTree();
@@ -369,9 +385,12 @@ public class MenuView {
                 tree.preorder();
                 tree.inorder();
                 tree.postorder();
+                
+                System.out.println("\nHierarchy Height: " + tree.height());
+                System.out.println("Total Employees in Hierarchy: " + tree.countNodes());
+
             }
 
-            // EXIT
             case EXIT -> System.out.println("Exiting...");
         }
     }
